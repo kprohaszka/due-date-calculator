@@ -30,23 +30,30 @@ public class DueDateCalculatorService
                 if (totalWorkingHours + hoursInCurrentDay >= turnaroundTimeInHours)
                 {
                     var remainingHours = turnaroundTimeInHours - totalWorkingHours;
-                    var minutes = (remainingHours % 1) * 60;
-                    var dueDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 9 + remainingHours, minutes, 0);
+                    var dueDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day,
+                        9 + remainingHours, submitDate.Minute, 0);
 
                     if (dueDate.Hour <= 17) return dueDate;
-                    
                     var extraHours = dueDate.Hour - 17;
                     dueDate = dueDate.AddDays(1).AddHours(-extraHours);
+                    dueDate = new DateTime(dueDate.Year, dueDate.Month, dueDate.Day, 9, submitDate.Minute,
+                        0);
 
                     return dueDate;
                 }
-
-                totalWorkingHours += hoursInCurrentDay;
-                currentDate = currentDate.AddDays(1).AddHours(-workingHoursPerDay);
+                else
+                {
+                    totalWorkingHours += hoursInCurrentDay;
+                    currentDate = currentDate.AddDays(1);
+                    currentDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 9,
+                        submitDate.Minute, 0);
+                }
             }
             else
             {
                 currentDate = currentDate.AddDays(1);
+                currentDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 9, submitDate.Minute,
+                    0);
             }
         }
 
