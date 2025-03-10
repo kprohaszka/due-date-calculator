@@ -455,6 +455,7 @@ cmake-build-*/
 out/
 
 .idea
+.DS_Store
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
