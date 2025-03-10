@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DueDateCalculator\DueDateCalculator.csproj" />
+  </ItemGroup>
+
 </Project>
