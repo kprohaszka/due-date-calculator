@@ -102,6 +102,6 @@ public class DueDateCalculatorService
 
     private DateTime CreateDateTimeWithHour(DateTime date, int hour)
     {
-        return new DateTime(date.Year, date.Month, date.Day, hour, date.Minute, 0);
+        return new DateTime(date.Year, date.Month, date.Day, hour, date.Minute, 0, date.Kind);
     }
 }
