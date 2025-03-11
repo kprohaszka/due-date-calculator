@@ -26,8 +26,7 @@ The **Due Date Calculator** is a software solution designed to determine the res
 
 The repository is organized as follows:
 
-```
-text
+```text
 src/
 ├── DueDateCalculator/
 │   ├── Models/
@@ -55,23 +54,20 @@ Ensure you have the following installed:
 
 1. Clone the repository:
 
-   ```
-   bash
+   ```bash
    git clone https://github.com/yourusername/due-date-calculator.git
    cd due-date-calculator
    ```
 
 2. Build the project:
 
-   ```
-   bash
+   ```bash
    dotnet build
    ```
 
 3. Run tests:
 
-   ```
-   bash
+   ```bash
    dotnet test
    ```
 
@@ -111,8 +107,7 @@ The project includes unit tests using xUnit framework to validate all major func
 
 Run tests using:
 
-```
-bash
+```bash
 dotnet test
 ```
 
