@@ -5,18 +5,21 @@ namespace DueDateCalculator.Services;
 public class DueDateCalculatorService
 {
     private const int WorkingHoursPerDay = 8;
-    private const int StartHour = 9;
-    private const int EndHour = 17;
+    private const int WorkDayStartHour = 9;
+    private const int WorkDayEndHour = 17;
 
     public DateTime CalculateDueDate(SubmitInfo submitInfo)
     {
-        if (submitInfo.TurnaroundTimeInHours < 0)
-        {
-            throw new ArgumentException("Turnaround time cannot be negative.",
-                nameof(submitInfo.TurnaroundTimeInHours));
-        }
-
+        ValidateTurnaroundTime(submitInfo.TurnaroundTimeInHours);
         return CalculateDueDateInternal(submitInfo.SubmitDate, submitInfo.TurnaroundTimeInHours);
+    }
+
+    private void ValidateTurnaroundTime(int turnaroundTimeInHours)
+    {
+        if (turnaroundTimeInHours < 0)
+        {
+            throw new ArgumentException("Turnaround time cannot be negative.", nameof(turnaroundTimeInHours));
+        }
     }
 
     private DateTime CalculateDueDateInternal(DateTime submitDate, int turnaroundTimeInHours)
@@ -33,24 +36,20 @@ public class DueDateCalculatorService
         {
             if (IsWorkingDay(currentDate))
             {
-                var hoursInCurrentDay = GetWorkingHoursInDay(currentDate);
+                var workingHoursInCurrentDay = GetRemainingWorkingHoursInDay(currentDate);
 
-                if (totalWorkingHours + hoursInCurrentDay >= turnaroundTimeInHours)
+                if (totalWorkingHours + workingHoursInCurrentDay >= turnaroundTimeInHours)
                 {
                     var remainingHours = turnaroundTimeInHours - totalWorkingHours;
-                    var dueDate = AdjustDueDate(currentDate, remainingHours);
+                    return CalculateFinalDueDate(currentDate, remainingHours);
+                }
 
-                    return dueDate;
-                }
-                else
-                {
-                    totalWorkingHours += hoursInCurrentDay;
-                    currentDate = MoveToNextWorkingDay(currentDate);
-                }
+                totalWorkingHours += workingHoursInCurrentDay;
+                currentDate = GetNextWorkingDay(currentDate);
             }
             else
             {
-                currentDate = MoveToNextWorkingDay(currentDate);
+                currentDate = GetNextWorkingDay(currentDate);
             }
         }
 
@@ -62,40 +61,47 @@ public class DueDateCalculatorService
         return date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday;
     }
 
-    private int GetWorkingHoursInDay(DateTime date)
+    private int GetRemainingWorkingHoursInDay(DateTime date)
     {
-        var startOfWorkingDay = new DateTime(date.Year, date.Month, date.Day, StartHour, 0, 0);
-        var endOfWorkingDay = new DateTime(date.Year, date.Month, date.Day, EndHour, 0, 0);
+        var workDayStart = CreateDateTimeWithHour(date, WorkDayStartHour);
+        var workDayEnd = CreateDateTimeWithHour(date, WorkDayEndHour);
 
-        if (date < startOfWorkingDay)
+        if (date < workDayStart)
         {
-            return EndHour - StartHour;
+            return WorkingHoursPerDay;
         }
-        else if (date > endOfWorkingDay)
+
+        if (date > workDayEnd)
         {
             return 0;
         }
-        else
+
+        return WorkDayEndHour - date.Hour;
+    }
+
+    private DateTime GetNextWorkingDay(DateTime date)
+    {
+        var nextDay = date.AddDays(1);
+        return CreateDateTimeWithHour(nextDay, WorkDayStartHour);
+    }
+
+    private DateTime CalculateFinalDueDate(DateTime date, int remainingHours)
+    {
+        var dueDateTime = CreateDateTimeWithHour(date, WorkDayStartHour + remainingHours);
+
+        if (dueDateTime.Hour <= WorkDayEndHour)
         {
-            return EndHour - date.Hour;
+            return dueDateTime;
         }
+
+        var hoursIntoNextDay = dueDateTime.Hour - WorkDayEndHour;
+        var nextWorkDay = GetNextWorkingDay(dueDateTime);
+
+        return CreateDateTimeWithHour(nextWorkDay, WorkDayStartHour + hoursIntoNextDay - 1);
     }
 
-    private DateTime MoveToNextWorkingDay(DateTime date)
+    private DateTime CreateDateTimeWithHour(DateTime date, int hour)
     {
-        date = date.AddDays(1);
-        return new DateTime(date.Year, date.Month, date.Day, StartHour, date.Minute, 0);
-    }
-
-    private DateTime AdjustDueDate(DateTime date, int remainingHours)
-    {
-        var dueDate = new DateTime(date.Year, date.Month, date.Day, StartHour + remainingHours, date.Minute, 0);
-
-        if (dueDate.Hour <= EndHour) return dueDate;
-        var extraHours = dueDate.Hour - EndHour;
-        dueDate = dueDate.AddDays(1).AddHours(-extraHours);
-        dueDate = new DateTime(dueDate.Year, dueDate.Month, dueDate.Day, StartHour, date.Minute, 0);
-
-        return dueDate;
+        return new DateTime(date.Year, date.Month, date.Day, hour, date.Minute, 0);
     }
 }
