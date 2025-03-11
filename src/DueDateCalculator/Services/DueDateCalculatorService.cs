@@ -11,7 +11,7 @@ public class DueDateCalculatorService
     public DateTime CalculateDueDate(SubmitInfo submitInfo)
     {
         ValidateTurnaroundTime(submitInfo.TurnaroundTimeInHours);
-        return CalculateDueDateInternal(submitInfo.SubmitDate, submitInfo.TurnaroundTimeInHours);
+        return ProcessDueDateCalculation(submitInfo.SubmitDate, submitInfo.TurnaroundTimeInHours);
     }
 
     private void ValidateTurnaroundTime(int turnaroundTimeInHours)
@@ -22,7 +22,7 @@ public class DueDateCalculatorService
         }
     }
 
-    private DateTime CalculateDueDateInternal(DateTime submitDate, int turnaroundTimeInHours)
+    private DateTime ProcessDueDateCalculation(DateTime submitDate, int turnaroundTimeInHours)
     {
         if (turnaroundTimeInHours == 0)
         {
