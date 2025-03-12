@@ -143,11 +143,11 @@ dotnet test
 7. Use Mocking frameworks for the updated logic.
 8. Add dependency injection to reduce class coupling for better modularity, testability and scalability.
 
-## Improvement branch -> feature/dependency-injection-refactor
+## Improvement branch -> feature/dependency-injection-refactor:
 
-## Dependency Injection & Interface-based Design
+### Dependency Injection & Interface-based Design
 
-This project has been refactored to use dependency injection and interfaces, providing several key benefits:
+On dependency-injection-refactor branch this project has been refactored to use dependency injection and interfaces, to showcase a possible path of future improvement, providing several key benefits:
 
 ### Key Design Features
 
