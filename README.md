@@ -138,6 +138,38 @@ dotnet test
 2. Extend functionality to handle different time zones.
 3. Implement additional logging for debugging purposes.
 4. Optimize performance for large-scale systems.
+5. Separate concerns even further from DueDateCalculatorService (to WorkingHoursConfiguration, WorkingCalendar etc.)
+6. Create Interfaces for components for better testability and further modularity. (IDueDateCalculator, IWorkingCalendar etc.)
+7. Use Mocking frameworks for the updated logic.
+8. Add dependency injection to reduce class coupling for better modularity, testability and scalability.
+
+## Improvement branch -> feature/dependency-injection-refactor
+
+## Dependency Injection & Interface-based Design
+
+This project has been refactored to use dependency injection and interfaces, providing several key benefits:
+
+### Key Design Features
+
+- **Separation of Concerns**: Core logic is separated from infrastructure concerns
+- **Dependency Injection**: Services receive their dependencies through constructor injection
+- **Interface-based Design**: Components depend on abstractions rather than concrete implementations
+- **Testability**: Mocking frameworks can be used to isolate units under test
+
+### Core Components
+
+- `IDueDateCalculator`: Interface for calculating due dates based on submission info
+- `IWorkingCalendar`: Interface for working with business days and hours
+- `DueDateCalculatorService`: Implementation that calculates due dates using the working calendar
+- `WorkingHoursConfiguration`: Configuration object for business hours settings
+
+### Testing Strategy
+
+The refactored architecture enables more effective unit testing:
+
+1. **Mock-based Testing**: External dependencies can be mocked for controlled testing
+2. **Isolated Component Testing**: Each component can be tested in isolation
+3. **Edge Case Verification**: Complex business logic can be tested with specific scenarios
 
 ## Contributing
 
