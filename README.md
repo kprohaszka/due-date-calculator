@@ -147,7 +147,7 @@ dotnet test
 
 ### Dependency Injection & Interface-based Design
 
-On dependency-injection-refactor branch this project has been refactored to use dependency injection and interfaces, to showcase a possible path of future improvement, providing several key benefits:
+On `feature/dependency-injection-refactor` branch this project has been refactored to use dependency injection and interfaces, to showcase a possible path of future improvement, providing several key benefits:
 
 ### Key Design Features
 
